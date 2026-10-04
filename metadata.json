@@ -1,0 +1,6 @@
+{
+  "name": "FoodRescue AI",
+  "description": "Rescue Food. Connect Communities. AI-Powered Surplus Food Donation & Direct Donor–Charity Connection Platform.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
