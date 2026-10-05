@@ -11,6 +11,7 @@ import { CharityDashboard } from './components/CharityDashboard';
 import { AdminDashboard } from './components/AdminDashboard';
 import { DonorAuthModal } from './components/DonorAuthModal';
 import { CharityAuthModal } from './components/CharityAuthModal';
+import { ToastContainer } from './components/ToastContainer';
 
 export default function App() {
   const state = useAppState();
@@ -75,6 +76,9 @@ export default function App() {
           setCharityModalOpen(false);
         }}
       />
+
+      {/* Global Toast Notification System */}
+      <ToastContainer />
     </div>
   );
 }

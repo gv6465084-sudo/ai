@@ -25,6 +25,7 @@ import {
   Share2,
 } from 'lucide-react';
 import { useAppState, appState } from '../services/store';
+import { toastService } from '../services/toastService';
 import { FoodDonation } from '../types';
 import { DirectChatModal } from './DirectChatModal';
 import { PickupCoordinationView } from './PickupCoordinationView';
@@ -161,7 +162,7 @@ export const CharityDashboard: React.FC<CharityDashboardProps> = ({
             return (
               <button
                 key={item.id}
-                onClick={() => (item.action ? item.action() : setActiveTab(item.id as any))}
+                onClick={() => setActiveTab(item.id as any)}
                 className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all cursor-pointer ${
                   isActive
                     ? 'bg-blue-600 text-white shadow-xs'
@@ -283,11 +284,7 @@ export const CharityDashboard: React.FC<CharityDashboardProps> = ({
                   <button
                     key={item.id}
                     onClick={() => {
-                      if (item.action) {
-                        item.action();
-                      } else {
-                        setActiveTab(item.id as any);
-                      }
+                      setActiveTab(item.id as any);
                       setIsMobileMenuOpen(false);
                     }}
                     className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all cursor-pointer ${
@@ -361,8 +358,44 @@ export const CharityDashboard: React.FC<CharityDashboardProps> = ({
             </p>
           </div>
 
-          <div className="flex items-center gap-2 text-xs">
-            <span className="text-slate-600 font-semibold">Intake Status:</span>
+          <div className="flex items-center gap-2 flex-wrap text-xs">
+            <button
+              type="button"
+              onClick={() => {
+                toastService.notifyNearbyDonation({
+                  foodName: 'Hot Sambar Rice & Poriyal',
+                  portions: 45,
+                  location: 'Kondamanaickenpatti, Namakkal',
+                  urgencyLevel: 'HIGH',
+                  donorName: 'Kondamanaickenpatti Food Hub',
+                  distanceKm: 2.1,
+                  onAction: () => setActiveTab('requests'),
+                });
+              }}
+              className="px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+              title="Test nearby donation toast alert"
+            >
+              <Bell className="w-3.5 h-3.5 text-blue-600" />
+              <span>🔔 Test Nearby Alert</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                toastService.notifyPickupAccepted({
+                  foodName: 'Fresh Breads & Veg Meals',
+                  charityName: charity.organizationName,
+                  portions: 35,
+                  onAction: () => setActiveTab('pickups'),
+                });
+              }}
+              className="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+              title="Test pickup acceptance toast alert"
+            >
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+              <span>🎉 Test Pickup Alert</span>
+            </button>
+
             <span className="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-800 font-bold border border-emerald-300">
               Capacity Available ({charity.dailyCapacity} meals/day)
             </span>
@@ -452,10 +485,10 @@ export const CharityDashboard: React.FC<CharityDashboardProps> = ({
                   <div className="col-span-1 md:col-span-2 p-10 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-500 space-y-2">
                     <Utensils className="w-8 h-8 text-slate-300 mx-auto" />
                     <h4 className="font-heading font-bold text-sm text-slate-800">
-                      No Pending Donation Requests
+                      Clean Slate — No Pending Donation Requests
                     </h4>
                     <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                      Your organization is active and verified in{' '}
+                      All demo data cleared. Your organization is active and verified in{' '}
                       <strong>Kondamanaickenpatti, Namakkal</strong>. When donors register surplus food, new pickup requests will appear here instantly.
                     </p>
                   </div>

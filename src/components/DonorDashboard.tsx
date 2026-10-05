@@ -41,6 +41,7 @@ import { ImpactAnalyticsView } from './ImpactAnalyticsView';
 import { VoiceToTextModal } from './VoiceToTextModal';
 import { DonationHistory } from './DonationHistory';
 import { ConnectByCharityIdModal } from './ConnectByCharityIdModal';
+import { toastService } from '../services/toastService';
 import { ParsedFoodDonation } from '../services/voiceParser';
 
 interface DonorDashboardProps {
@@ -393,6 +394,23 @@ export const DonorDashboard: React.FC<DonorDashboardProps> = ({ onLogout }) => {
             </button>
 
             <button
+              type="button"
+              onClick={() => {
+                toastService.notifyPickupAccepted({
+                  foodName: '30 Meals Veg Biryani & Curry',
+                  charityName: 'Praba Foundation',
+                  portions: 30,
+                  onAction: () => setActiveTab('donations'),
+                });
+              }}
+              className="px-3 py-2.5 bg-emerald-50/70 hover:bg-emerald-100 text-emerald-800 font-bold text-xs sm:text-sm rounded-xl transition-all border border-emerald-200 shadow-xs flex items-center gap-1.5 cursor-pointer"
+              title="Test toast alert for charity accepting a pickup"
+            >
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+              <span>🎉 Test Pickup Alert</span>
+            </button>
+
+            <button
               onClick={() => setIsVoiceModalOpen(true)}
               className="px-3.5 py-2.5 bg-white hover:bg-emerald-50 text-emerald-800 font-bold text-xs sm:text-sm rounded-xl transition-all border border-emerald-300 shadow-xs flex items-center gap-2 cursor-pointer"
               title="Describe food surplus using Web Speech API"
@@ -556,9 +574,9 @@ export const DonorDashboard: React.FC<DonorDashboardProps> = ({ onLogout }) => {
                       <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto">
                         <PlusCircle className="w-6 h-6" />
                       </div>
-                      <h4 className="font-bold text-sm text-slate-800">Ready for Food Donations</h4>
+                      <h4 className="font-bold text-sm text-slate-800">Clean Slate — Ready for New Donations</h4>
                       <p className="text-xs text-slate-500 max-w-xs mx-auto">
-                        No active surplus donations logged yet. Click below to register your fresh surplus food in Kondamanaickenpatti.
+                        All previous demo data cleared. Click below to create your fresh surplus donation in Kondamanaickenpatti.
                       </p>
                       <button
                         onClick={() => setIsCreateModalOpen(true)}
@@ -923,23 +941,6 @@ export const DonorDashboard: React.FC<DonorDashboardProps> = ({ onLogout }) => {
                 </span>
               </div>
             </div>
-
-            {/* Quick action to wipe demo data & start fresh */}
-            <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-              <div>
-                <h5 className="font-bold text-xs text-slate-800">Clear Data & Fresh Slate</h5>
-                <p className="text-[11px] text-slate-500">
-                  Reset mock records to zero whenever you want a completely fresh testing environment.
-                </p>
-              </div>
-              <button
-                onClick={() => setIsDataModalOpen(true)}
-                className="px-3.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs rounded-xl flex items-center gap-1.5 transition-colors cursor-pointer"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-                <span>Manage Data</span>
-              </button>
-            </div>
           </div>
         )}
       </main>
@@ -1058,83 +1059,6 @@ export const DonorDashboard: React.FC<DonorDashboardProps> = ({ onLogout }) => {
           setActiveTab('dashboard');
         }}
       />
-
-      {/* Clear / New Data Modal */}
-      {isDataModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4 border border-slate-200">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div className="flex items-center gap-2">
-                <Trash2 className="w-5 h-5 text-emerald-600" />
-                <h3 className="font-heading font-black text-base text-slate-900">
-                  Manage Demo Data & Clean Slate
-                </h3>
-              </div>
-              <button
-                onClick={() => setIsDataModalOpen(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Clear previous mock data to work with a completely clean slate in <strong>Kondamanaickenpatti, Namakkal</strong>.
-            </p>
-
-            <div className="space-y-3 pt-2">
-              <button
-                onClick={() => {
-                  appState.clearAllDemoData();
-                  setIsDataModalOpen(false);
-                }}
-                className="w-full text-left p-3.5 rounded-xl border border-rose-200 bg-rose-50/60 hover:bg-rose-100/70 transition-all flex items-start gap-3 cursor-pointer group"
-              >
-                <div className="w-9 h-9 rounded-lg bg-rose-600 text-white flex items-center justify-center shrink-0">
-                  <Trash2 className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-xs text-rose-900 group-hover:text-rose-950">
-                    Empty Clean Slate (0 Donations)
-                  </h4>
-                  <p className="text-[11px] text-rose-700 mt-0.5">
-                    Wipes all sample donations, chat messages, and notifications completely so you can create your own real donations.
-                  </p>
-                </div>
-              </button>
-
-              <button
-                onClick={() => {
-                  appState.loadSampleDonations();
-                  setIsDataModalOpen(false);
-                }}
-                className="w-full text-left p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/60 hover:bg-emerald-100/70 transition-all flex items-start gap-3 cursor-pointer group"
-              >
-                <div className="w-9 h-9 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0">
-                  <RotateCcw className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-xs text-emerald-900 group-hover:text-emerald-950">
-                    Generate New Sample Food Donation (Namakkal)
-                  </h4>
-                  <p className="text-[11px] text-emerald-700 mt-0.5">
-                    Generates fresh sample meal records with current timestamps in Kondamanaickenpatti, Namakkal to test AI and routing.
-                  </p>
-                </div>
-              </button>
-            </div>
-
-            <div className="pt-3 border-t border-slate-100 flex justify-end">
-              <button
-                onClick={() => setIsDataModalOpen(false)}
-                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg cursor-pointer"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Edit Organization Profile Modal */}
       {isEditProfileOpen && (

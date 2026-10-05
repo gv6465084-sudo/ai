@@ -23,6 +23,7 @@ import {
   INITIAL_CONNECTION_REQUESTS,
 } from '../data/mockData';
 import { runAIFoodAnalysis } from './aiService';
+import { toastService } from './toastService';
 
 const STORAGE_KEYS = {
   CURRENT_ROLE: 'foodrescue_current_role',
@@ -174,6 +175,19 @@ export const appState = {
         donationId: id,
       });
 
+      // Trigger Toast Alert for new nearby food donation
+      toastService.notifyNearbyDonation({
+        donationId: id,
+        foodName: donationData.foodName,
+        portions: donationData.portions,
+        location:
+          donationData.pickupLocation.locality ||
+          donationData.pickupLocation.place ||
+          'Local Neighborhood',
+        urgencyLevel: aiResult.urgencyLevel,
+        donorName: donationData.donorName,
+      });
+
       // Update donor stats
       this.donor = {
         ...this.donor,
@@ -261,6 +275,14 @@ export const appState = {
       message: `${targetDonation.selectedCharityName} accepted ${targetDonation.foodName}. Direct chat & pickup route are now available.`,
       type: 'success',
       donationId,
+    });
+
+    // Trigger Toast Notification for pickup acceptance
+    toastService.notifyPickupAccepted({
+      donationId,
+      foodName: targetDonation.foodName,
+      charityName: targetDonation.selectedCharityName || 'Charity Partner',
+      portions: targetDonation.portions,
     });
 
     // Add confirmation message
@@ -372,6 +394,12 @@ export const appState = {
 
     if (isDonorAlsoConfirmed) {
       this.recordCompletionImpact(donation);
+      toastService.notifyHandoverComplete({
+        donationId,
+        foodName: donation.foodName,
+        charityName: donation.selectedCharityName || 'Charity Partner',
+        portions: donation.portions || 30,
+      });
     }
 
     setStored(STORAGE_KEYS.DONATIONS, this.donations);

@@ -204,6 +204,22 @@ export interface AppNotification {
   read: boolean;
 }
 
+export interface ToastNotification {
+  id: string;
+  title: string;
+  message: string;
+  type: 'info' | 'success' | 'warning' | 'urgent';
+  actionLabel?: string;
+  onAction?: () => void;
+  duration?: number; // ms
+  createdAt: number;
+  donationId?: string;
+  charityId?: string;
+  portions?: number;
+  location?: string;
+  badge?: string;
+}
+
 export interface SurplusPrediction {
   dayOfWeek: string;
   expectedSurplusPortionsMin: number;
